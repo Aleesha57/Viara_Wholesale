@@ -1,0 +1,22 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* What is min-height: 100vh?
+   - vh = viewport height
+   - 100vh = 100% of the browser window height
+   - This ensures footer always stays at bottom
+*/
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* flex: 1 means this section takes up all available space
+   pushing the footer to the bottom */

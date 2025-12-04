@@ -1,0 +1,92 @@
+.product-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* overflow: hidden prevents content from spilling outside rounded corners */
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.product-image {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+/* Fixed height ensures all cards are same size */
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* object-fit: cover - Image fills space without distortion
+   like "cover" on background images */
+
+.product-card:hover .product-image img {
+  transform: scale(1.1);
+}
+
+/* Zoom effect on hover - image grows to 110% */
+
+.product-info {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+/* flex: 1 makes this section grow to fill available space
+   keeps button at bottom even with different text lengths */
+
+.product-name {
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* What do these do?
+   - overflow: hidden - Hides overflowing text
+   - text-overflow: ellipsis - Adds "..." if text is too long
+   - white-space: nowrap - Keeps text on one line
+   Example: "Very Long Product Name That..." */
+
+.product-price {
+  font-size: 1.5rem;
+  color: #27ae60;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.details-btn {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin-top: auto;
+}
+
+/* margin-top: auto pushes button to bottom of card */
+
+.details-btn:hover {
+  background-color: #2980b9;
+}

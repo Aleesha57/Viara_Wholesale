@@ -1,0 +1,73 @@
+.footer {
+  background-color: #2c3e50;
+  color: #fff;
+  padding: 3rem 0 1rem;
+  margin-top: auto;
+}
+
+/* margin-top: auto pushes footer to bottom of page */
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* What is grid-template-columns: repeat(3, 1fr)?
+   - Creates 3 equal columns
+   - repeat(3, 1fr) = three columns, each takes 1 fraction of space
+   - Think of it as dividing the footer into 3 equal parts
+*/
+
+.footer-section h3 {
+  margin-bottom: 1rem;
+  color: #3498db;
+}
+
+.footer-section h4 {
+  margin-bottom: 0.5rem;
+  color: #3498db;
+}
+
+.footer-section p {
+  margin-bottom: 0.5rem;
+  color: #ecf0f1;
+}
+
+.footer-section ul {
+  list-style: none;
+}
+
+.footer-section ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-section ul li a {
+  color: #ecf0f1;
+  transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: #3498db;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 2rem;
+  margin-top: 2rem;
+  border-top: 1px solid #34495e;
+  color: #95a5a6;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+/* On mobile, stack sections vertically (1 column) */
