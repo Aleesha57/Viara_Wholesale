@@ -6,121 +6,112 @@ import { productsAPI, categoriesAPI } from '../services/api';
 import '../styles/Products.css';
 
 function Products() {
-  // ============================================
-  // STATE MANAGEMENT
-  // ============================================
-  
-  // Search input value
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // Selected category filter
   const [selectedCategory, setSelectedCategory] = useState('all');
-  
-  // Products array from backend
   const [products, setProducts] = useState([]);
-  
-  // Categories array from backend
   const [categories, setCategories] = useState(['all']);
-  
-  // Loading state - show loader while fetching
   const [loading, setLoading] = useState(true);
-  
-  // Error state - store error messages
   const [error, setError] = useState(null);
+  const [categoriesError, setCategoriesError] = useState(false);
 
-  // ============================================
-  // FETCH CATEGORIES ON COMPONENT MOUNT
-  // ============================================
-  
   /**
-   * useEffect with empty dependency array []
-   * Runs ONCE when component first loads
-   * Perfect for initial data fetching
+   * WHY: Fetch categories when component mounts
+   * This runs ONCE when page loads
    */
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        console.log('Fetching categories...');
+        console.log('Starting to fetch categories...');
         
-        // Call API
-        const data = await categoriesAPI.getAll();
+        // Direct fetch to test
+        const response = await fetch('http://127.0.0.1:8000/api/categories/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+        console.log('Response status:', response.status);
         
-        console.log('Categories fetched:', data);
-        
-        // Extract category names and convert to lowercase
-        const categoryNames = data.map(cat => cat.name.toLowerCase());
-        
-        // Add 'all' at the beginning
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Raw categories data:', data);
+
+        // Handle both array and paginated responses
+        let categoriesList = [];
+        if (Array.isArray(data)) {
+          categoriesList = data;
+        } else if (data.results && Array.isArray(data.results)) {
+          categoriesList = data.results;
+        }
+
+        console.log('Processed categories:', categoriesList);
+
+        // Extract category names
+        const categoryNames = categoriesList.map(cat => cat.name.toLowerCase());
+        console.log('Category names:', categoryNames);
+
         setCategories(['all', ...categoryNames]);
-        
+        setCategoriesError(false);
+
       } catch (error) {
-        console.error('Error fetching categories:', error);
-        setError('Failed to load categories');
+        console.error('Detailed error fetching categories:', error);
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
+        setCategoriesError(true);
+        // Still show 'all' even if categories fail
+        setCategories(['all']);
       }
     };
 
     fetchCategories();
-  }, []); // Empty array = run once on mount
+  }, []);
 
-  // ============================================
-  // FETCH PRODUCTS WHEN FILTERS CHANGE
-  // ============================================
-  
   /**
-   * useEffect with dependencies [searchTerm, selectedCategory]
-   * Runs when searchTerm OR selectedCategory changes
-   * Fetches new products based on filters
+   * WHY: Fetch products when filters change
+   * Runs whenever searchTerm or selectedCategory changes
    */
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       setError(null);
-      
+
       try {
-        console.log('Fetching products with filters:', {
-          searchTerm,
-          selectedCategory
-        });
-        
+        console.log('Fetching products with:', { searchTerm, selectedCategory });
+
         let data;
-        
-        // Different API calls based on filters
+
         if (searchTerm) {
-          // If there's a search term, search
           data = await productsAPI.search(searchTerm);
         } else if (selectedCategory !== 'all') {
-          // If category is selected, filter by category
           data = await productsAPI.filterByCategory(selectedCategory);
         } else {
-          // Otherwise, get all products
           data = await productsAPI.getAll();
         }
-        
-        console.log('Products fetched:', data);
-        
-        // Handle both paginated and non-paginated responses
-        // Paginated: { results: [...], count: 10 }
-        // Non-paginated: [...]
+
+        console.log('Products response:', data);
+
+        // Handle both formats
         const productsList = data.results || data;
         
-        setProducts(productsList);
-        
+        console.log('Setting products:', productsList);
+        setProducts(Array.isArray(productsList) ? productsList : []);
+
       } catch (error) {
         console.error('Error fetching products:', error);
         setError('Failed to load products. Please make sure the backend is running.');
+        setProducts([]);
       } finally {
-        // Always set loading to false, even if error
         setLoading(false);
       }
     };
 
     fetchProducts();
-  }, [searchTerm, selectedCategory]); // Run when these change
+  }, [searchTerm, selectedCategory]);
 
-  // ============================================
-  // RENDER
-  // ============================================
-  
   return (
     <div className="products-page">
       <Banner 
@@ -128,30 +119,34 @@ function Products() {
         subtitle="Browse our wide range of wholesale products"
       />
 
-      {/* FILTERS SECTION */}
+      {/* Filters Section */}
       <div className="filters-section">
-        {/* SEARCH BOX */}
         <div className="search-box">
           <input
             type="text"
             placeholder="Search products..."
             value={searchTerm}
             onChange={(e) => {
-              console.log('Search term changed:', e.target.value);
+              console.log('Search term:', e.target.value);
               setSearchTerm(e.target.value);
             }}
             className="search-input"
           />
         </div>
 
-        {/* CATEGORY FILTERS */}
         <div className="category-filters">
+          {categoriesError && (
+            <div className="categories-error-notice">
+              ⚠️ Categories couldn't load from backend. Showing all products.
+            </div>
+          )}
+          
           {categories.map((category) => (
             <button
               key={category}
               className={`filter-btn ${selectedCategory === category ? 'active' : ''}`}
               onClick={() => {
-                console.log('Category selected:', category);
+                console.log('Selected category:', category);
                 setSelectedCategory(category);
               }}
             >
@@ -161,21 +156,18 @@ function Products() {
         </div>
       </div>
 
-      {/* ERROR MESSAGE */}
+      {/* Error Message */}
       {error && (
-        <div className="error-message" style={{
-          padding: '1rem',
-          backgroundColor: '#fee',
-          border: '1px solid #fcc',
-          borderRadius: '4px',
-          margin: '1rem 0',
-          color: '#c00'
-        }}>
-          {error}
+        <div className="error-message">
+          <strong>Error:</strong> {error}
+          <br />
+          <small>
+            Make sure Django backend is running at http://127.0.0.1:8000
+          </small>
         </div>
       )}
 
-      {/* PRODUCTS GRID OR LOADER */}
+      {/* Products Grid */}
       {loading ? (
         <Loader />
       ) : (
@@ -188,7 +180,7 @@ function Products() {
             <div className="no-products">
               <p>No products found matching your criteria.</p>
               <p style={{ fontSize: '0.9rem', color: '#666' }}>
-                Try different search terms or category
+                Try different search terms or check if backend is running
               </p>
             </div>
           )}

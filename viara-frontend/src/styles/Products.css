@@ -85,6 +85,41 @@
   font-size: 1.2rem;
 }
 
+/* Categories Error Notice */
+.categories-error-notice {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  color: #856404;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Enhanced Error Message */
+.error-message {
+  background: #fee;
+  border: 2px solid #fcc;
+  color: #c00;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.error-message strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.error-message small {
+  display: block;
+  margin-top: 0.5rem;
+  color: #666;
+}
+
 /* grid-column: 1 / -1 makes element span all columns
    1 = start at column 1
    -1 = end at last column */
