@@ -93,75 +93,87 @@ class CartViewSet(viewsets.ModelViewSet):
 # ------------------------------------------------------------
 # ORDER VIEWSET (MERGED VERSION - FIXED)
 # ------------------------------------------------------------
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .models import Order, OrderItem
+from .serializers import OrderSerializer
+
 class OrderViewSet(viewsets.ModelViewSet):
     """
     API endpoint for orders
+    
+    Endpoints:
+    - GET    /api/orders/              - List user's orders
+    - POST   /api/orders/              - Create order
+    - GET    /api/orders/{id}/         - Get order details
+    - PATCH  /api/orders/{id}/         - Update order (admin)
+    - DELETE /api/orders/{id}/         - Delete order (admin)
+    - POST   /api/orders/{id}/cancel/  - Cancel order (user/admin)
     """
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
-
+    
     def get_queryset(self):
         """
-        Admin → see all orders
-        User  → only their orders
+        Return orders for current user
+        Admins can see all orders
         """
         user = self.request.user
-
         if user.is_staff or user.is_superuser:
-            return Order.objects.all()
-
-        return Order.objects.filter(user=user)
-
-    @action(detail=False, methods=['post'])
-    def create_from_cart(self, request):
+            return Order.objects.all().order_by('-created_at')
+        return Order.objects.filter(user=user).order_by('-created_at')
+    
+    @action(detail=True, methods=['post'])
+    def cancel(self, request, pk=None):
         """
-        Create order from current user's cart
+        Cancel an order
+        POST /api/orders/{id}/cancel/
+        
+        Users can cancel their own orders if status is 'pending' or 'processing'
+        Admins can cancel any order except 'delivered'
         """
-        try:
-            cart = Cart.objects.get(user=request.user)
-        except Cart.DoesNotExist:
+        order = self.get_object()
+        user = request.user
+        
+        # Check if user owns this order (unless admin)
+        if not (user.is_staff or user.is_superuser):
+            if order.user != user:
+                return Response(
+                    {'error': 'You do not have permission to cancel this order'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+        
+        # Check if order can be cancelled
+        if order.status == 'cancelled':
             return Response(
-                {"error": "Cart is empty"},
+                {'error': 'Order is already cancelled'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
-        if not cart.items.exists():
+        
+        if order.status == 'delivered':
             return Response(
-                {"error": "Cart is empty"},
+                {'error': 'Cannot cancel delivered orders'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
-        # Extra details from frontend
-        payment_method = request.data.get('payment_method', 'cod')
-        shipping_address = request.data.get('shipping_address', '')
-        phone = request.data.get('phone', '')
-
-        # Create Order
-        order = Order.objects.create(
-            user=request.user,
-            total_amount=cart.total_price,
-            status='pending',
-            shipping_address=shipping_address,
-            phone=phone,
-            payment_method=payment_method,
-        )
-
-        # Convert cart → order items
-        for item in cart.items.all():
-            OrderItem.objects.create(
-                order=order,
-                product=item.product,
-                quantity=item.quantity,
-                price=item.product.price,
-            )
-
-        # Clear cart
-        cart.items.all().delete()
-
+        
+        # For regular users, only allow cancellation of pending/processing orders
+        if not (user.is_staff or user.is_superuser):
+            if order.status not in ['pending', 'processing']:
+                return Response(
+                    {'error': f'Cannot cancel orders with status: {order.status}'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        
+        # Cancel the order
+        order.status = 'cancelled'
+        order.save()
+        
         return Response({
-            "message": "Order created successfully",
-            "order": OrderSerializer(order).data
-        }, status=status.HTTP_201_CREATED)
+            'message': 'Order cancelled successfully',
+            'order': OrderSerializer(order).data
+        }, status=status.HTTP_200_OK)
 
 
 # ------------------------------------------------------------

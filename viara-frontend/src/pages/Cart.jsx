@@ -176,7 +176,7 @@ function Cart() {
                 <div className="cart-item-details">
                   <h3>{item.product.name}</h3>
                   <p className="cart-item-category">{item.product.category_name}</p>
-                  <p className="cart-item-price">${item.product.price}</p>
+                  <p className="cart-item-price">₹{item.product.price}</p>
                 </div>
 
                 <div className="cart-item-quantity">
@@ -186,7 +186,7 @@ function Cart() {
 
                 <div className="cart-item-subtotal">
                   <span className="subtotal-label">Subtotal:</span>
-                  <span className="subtotal-value">${item.subtotal}</span>
+                  <span className="subtotal-value">₹{item.subtotal}</span>
                 </div>
 
                 <button 
@@ -205,7 +205,7 @@ function Cart() {
             
             <div className="summary-row">
               <span>Items ({cart.items.length}):</span>
-              <span>${cart.total_price}</span>
+              <span>₹{cart.total_price}</span>
             </div>
 
             <div className="summary-row">
@@ -215,7 +215,7 @@ function Cart() {
 
             <div className="summary-row total">
               <span>Total:</span>
-              <span>${cart.total_price}</span>
+              <span>₹{cart.total_price}</span>
             </div>
 
             {/* ✅ NEW: Single button to navigate to checkout */}

@@ -172,3 +172,37 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Add these to your existing settings.py file
+
+# ============================================
+# EMAIL CONFIGURATION FOR PASSWORD RESET
+# ============================================
+
+# For Gmail SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = ''  # Replace with your Gmail
+EMAIL_HOST_PASSWORD = ''  # Replace with Gmail App Password
+DEFAULT_FROM_EMAIL = 'VIARA Store <your-email@gmail.com>'
+SERVER_EMAIL = 'your-email@gmail.com'
+
+# Frontend URL (for password reset links)
+FRONTEND_URL = 'http://localhost:5173'
+
+# ============================================
+# HOW TO GET GMAIL APP PASSWORD:
+# ============================================
+# 1. Go to https://myaccount.google.com/
+# 2. Click "Security" in left sidebar
+# 3. Enable "2-Step Verification" if not already enabled
+# 4. Search for "App passwords" in the search bar
+# 5. Click "App passwords"
+# 6. Select "Mail" and "Other (Custom name)"
+# 7. Name it "VIARA Django App"
+# 8. Click "Generate"
+# 9. Copy the 16-character password (looks like: xxxx xxxx xxxx xxxx)
+# 10. Paste it in EMAIL_HOST_PASSWORD above (without spaces)
+# ============================================

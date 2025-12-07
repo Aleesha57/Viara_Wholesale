@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import '../styles/Register.css';
+import '../styles/Login.css';
 
 function Register() {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
     username: '',
-    email: '',
+    email: '',           // ✨ Email field added
     password: '',
-    password2: '',
-    first_name: '',
-    last_name: ''
+    confirmPassword: '',
+    firstName: '',
+    lastName: ''
   });
   
   const [loading, setLoading] = useState(false);
@@ -24,14 +24,40 @@ function Register() {
     });
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    // Validate passwords match
-    if (formData.password !== formData.password2) {
-      setError("Passwords don't match");
+    // Validation
+    if (!formData.username || !formData.email || !formData.password) {
+      setError('Username, email, and password are required');
+      setLoading(false);
+      return;
+    }
+
+    // Email validation
+    if (!validateEmail(formData.email)) {
+      setError('Please enter a valid email address');
+      setLoading(false);
+      return;
+    }
+
+    // Password match validation
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+
+    // Password length validation
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
       setLoading(false);
       return;
     }
@@ -42,7 +68,13 @@ function Register() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,        // ✨ Send email
+          password: formData.password,
+          first_name: formData.firstName,
+          last_name: formData.lastName
+        }),
       });
 
       const data = await response.json();
@@ -63,11 +95,11 @@ function Register() {
   };
 
   return (
-    <div className="register-page">
-      <div className="register-container">
-        <div className="register-card">
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-card">
           <h1>Create Account</h1>
-          <p className="register-subtitle">Join VIARA Wholesale today</p>
+          <p className="login-subtitle">Join VIARA today</p>
 
           {error && (
             <div className="error-message">
@@ -75,35 +107,7 @@ function Register() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="register-form">
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="first_name">First Name *</label>
-                <input
-                  type="text"
-                  id="first_name"
-                  name="first_name"
-                  value={formData.first_name}
-                  onChange={handleChange}
-                  required
-                  placeholder="John"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="last_name">Last Name *</label>
-                <input
-                  type="text"
-                  id="last_name"
-                  name="last_name"
-                  value={formData.last_name}
-                  onChange={handleChange}
-                  required
-                  placeholder="Doe"
-                />
-              </div>
-            </div>
-
+          <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">
               <label htmlFor="username">Username *</label>
               <input
@@ -113,12 +117,14 @@ function Register() {
                 value={formData.username}
                 onChange={handleChange}
                 required
-                placeholder="johndoe"
+                placeholder="Choose a username"
+                autoComplete="username"
               />
             </div>
 
+            {/* ✨ EMAIL FIELD - NEW */}
             <div className="form-group">
-              <label htmlFor="email">Email *</label>
+              <label htmlFor="email">Email Address *</label>
               <input
                 type="email"
                 id="email"
@@ -126,8 +132,38 @@ function Register() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder="john@example.com"
+                placeholder="your.email@example.com"
+                autoComplete="email"
               />
+              <small className="field-hint">Used for password recovery</small>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="firstName">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="John"
+                  autoComplete="given-name"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="lastName">Last Name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Doe"
+                  autoComplete="family-name"
+                />
+              </div>
             </div>
 
             <div className="form-group">
@@ -139,35 +175,35 @@ function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                minLength="8"
-                placeholder="Minimum 8 characters"
+                placeholder="Minimum 6 characters"
+                autoComplete="new-password"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="password2">Confirm Password *</label>
+              <label htmlFor="confirmPassword">Confirm Password *</label>
               <input
                 type="password"
-                id="password2"
-                name="password2"
-                value={formData.password2}
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                minLength="8"
                 placeholder="Re-enter password"
+                autoComplete="new-password"
               />
             </div>
 
             <button 
               type="submit" 
-              className="register-btn"
+              className="login-btn"
               disabled={loading}
             >
-              {loading ? 'Creating Account...' : 'Create Account'}
+              {loading ? 'Creating Account...' : 'Register'}
             </button>
           </form>
 
-          <div className="register-footer">
+          <div className="login-footer">
             <p>Already have an account? <Link to="/login">Login here</Link></p>
           </div>
         </div>

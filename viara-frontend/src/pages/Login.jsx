@@ -45,19 +45,15 @@ function Login() {
         throw new Error(data.error || 'Login failed');
       }
 
-      // Call login from context (this updates Navbar automatically!)
+      // Call login from context
       login(data.token, data.user);
 
-      // ============================================
-      // REDIRECT BASED ON USER TYPE
-      // ============================================
+      // Redirect based on user type
       if (data.user.is_staff || data.user.is_superuser) {
-        // Admin user - redirect to admin dashboard
         console.log('🔐 Admin user detected - redirecting to dashboard');
         alert('Welcome Admin!');
         navigate('/admin/dashboard');
       } else {
-        // Regular user - redirect to home
         console.log('👤 Regular user - redirecting to home');
         alert('Login successful!');
         navigate('/');
@@ -111,6 +107,11 @@ function Login() {
                 placeholder="Enter your password"
                 autoComplete="current-password"
               />
+            </div>
+
+            {/* ✨ Forgot Password Link */}
+            <div className="forgot-password-link">
+              <Link to="/forgot-password">Forgot Password?</Link>
             </div>
 
             <button 

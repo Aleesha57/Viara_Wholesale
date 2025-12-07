@@ -1,21 +1,12 @@
-/* Navbar Container */
+/* ==================== BASE NAVBAR STYLES ==================== */
 .navbar {
-  background-color: #2c3e50;
-  padding: 1rem 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
-/* What does this mean?
-   - background-color: Dark blue-gray background
-   - padding: 1rem = 16px top and bottom, 0 left and right
-   - position: sticky - Navbar stays at top when scrolling
-   - top: 0 - Sticks to the very top
-   - z-index: 1000 - Appears above other elements
-   - box-shadow: Small shadow below navbar
-*/
 
 .navbar-container {
   max-width: 1200px;
@@ -23,114 +14,172 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0 20px;
+  height: 70px;
+  position: relative;
 }
 
-/* What does this mean?
-   - max-width: 1200px - Content won't stretch beyond 1200px
-   - margin: 0 auto - Centers the container
-   - display: flex - Uses flexbox for layout
-   - justify-content: space-between - Logo left, menu right
-   - align-items: center - Vertically centers items
-*/
-
-/* Logo Styling */
+/* ==================== LOGO ==================== */
 .navbar-logo a {
-  color: #fff;
-  font-size: 1.8rem;
-  font-weight: bold;
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+  text-decoration: none;
   letter-spacing: 2px;
+  transition: all 0.3s ease;
+  z-index: 1001;
+  position: relative;
 }
 
 .navbar-logo a:hover {
-  color: #3498db;
-  transition: color 0.3s ease;
+  transform: scale(1.05);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
-/* Navigation Menu */
-.navbar-menu {
+/* ==================== MOBILE MENU BUTTON ==================== */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 1001;
+  position: relative;
+}
+
+.hamburger {
   display: flex;
-  list-style: none;
-  gap: 2rem;
-}
-
-/* What is gap?
-   - gap: 2rem - Adds space between menu items
-   - Much easier than using margins!
-*/
-
-.navbar-menu li a {
-  color: #fff;
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  flex-direction: column;
+  gap: 5px;
+  width: 28px;
+  height: 24px;
+  position: relative;
   transition: all 0.3s ease;
 }
 
-.navbar-menu li a:hover {
-  background-color: #34495e;
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(7px, 7px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* ==================== MENU ==================== */
+.navbar-menu {
+  display: flex;
+  list-style: none;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.navbar-menu li {
+  margin: 0;
+}
+
+.navbar-menu a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.navbar-menu a:hover {
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
 
-/* What is transform: translateY(-2px)?
-   - Moves the link up by 2 pixels on hover
-   - Creates a subtle "lift" effect
-*/
-
-/* Login Button Special Styling */
-.login-btn {
-  background-color: #3498db;
-  padding: 0.5rem 1.5rem !important;
+/* ==================== USER GREETING ==================== */
+.user-greeting {
+  color: white;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 14px;
+  display: inline-block;
 }
 
-/* What is !important?
-   - Forces this style to override other styles
-   - Use sparingly!
-*/
+/* ==================== BUTTONS ==================== */
+.login-btn {
+  background: white !important;
+  color: #667eea !important;
+  padding: 10px 20px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+}
 
 .login-btn:hover {
-  background-color: #2980b9;
-}
-
-/* Mobile Responsive - For screens smaller than 768px */
-@media (max-width: 768px) {
-  .navbar-menu {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .navbar-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-}
-
-.user-greeting {
-  color: #fff;
-  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.9) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .logout-btn {
-  background: #e74c3c;
+  background: rgba(255, 255, 255, 0.2);
   color: white;
-  border: none;
-  padding: 0.5rem 1.5rem;
-  border-radius: 4px;
+  border: 2px solid white;
+  padding: 8px 16px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .logout-btn:hover {
-  background: #c0392b;
+  background: white;
+  color: #667eea;
+  transform: translateY(-2px);
 }
-/* What does @media do?
-   - Applies styles only when screen is 768px or smaller
-   - This makes our navbar stack vertically on phones
-*/
 
-/* Add this to your existing Navbar.css file */
+/* ==================== MOBILE CLOSE & DIVIDER ==================== */
+.mobile-close {
+  display: none;
+}
 
-/* Admin-specific navbar styling */
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  transform: rotate(90deg);
+  color: #ff6b6b;
+}
+
+.menu-divider {
+  display: none;
+}
+
+/* ==================== MOBILE OVERLAY ==================== */
+.mobile-overlay {
+  display: none;
+}
+
+/* ==================== ADMIN NAVBAR ==================== */
 .admin-navbar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
@@ -152,9 +201,172 @@
   background: rgba(255, 255, 255, 0.9);
   color: #667eea;
   font-weight: 600;
+  border: none;
 }
 
 .admin-navbar .logout-btn:hover {
   background: white;
   transform: translateY(-2px);
+}
+
+/* ==================== RESPONSIVE - TABLET ==================== */
+@media (max-width: 968px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .mobile-close {
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+
+  .navbar-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 260px;
+    max-width: 75vw;
+    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 70px 20px 20px;
+    gap: 0;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    z-index: 1000;
+  }
+
+  .navbar-menu.mobile-open {
+    right: 0;
+  }
+
+  .navbar-menu li {
+    width: 100%;
+    margin: 0;
+  }
+
+  .navbar-menu a {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .navbar-menu a:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateX(5px);
+  }
+
+  .user-greeting {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 15px;
+  }
+
+  .logout-btn,
+  .login-btn {
+    width: 100%;
+    padding: 16px 20px !important;
+    border-radius: 8px !important;
+    margin-bottom: 8px;
+    font-size: 16px !important;
+    text-align: center;
+  }
+
+  .logout-btn:hover,
+  .login-btn:hover {
+    transform: translateX(5px) !important;
+  }
+
+  .menu-divider {
+    display: block;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 0;
+  }
+
+  .mobile-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* ==================== RESPONSIVE - MOBILE ==================== */
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 0 15px;
+    height: 60px;
+  }
+
+  .navbar-logo a {
+    font-size: 22px;
+  }
+
+  .navbar-menu {
+    width: 240px;
+    padding: 65px 18px 18px;
+  }
+
+  .navbar-menu a {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+
+  .user-greeting {
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+
+  .logout-btn,
+  .login-btn {
+    padding: 14px 16px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* ==================== SMOOTH SCROLLBAR ==================== */
+.navbar-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.navbar-menu::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.navbar-menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.navbar-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
