@@ -1,16 +1,41 @@
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
-import '../../styles/Navbar.css';
 import AuthContext from '../../contexts/AuthContext';
+import '../../styles/Navbar.css';
 
 function Navbar() {
-  const { user, isLoggedIn, logout } = useContext(AuthContext);
+  const { user, isLoggedIn, isAdmin, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
     logout();
     window.location.href = '/';
   };
 
+  // ADMIN VIEW - Only show admin info and logout
+  if (isAdmin) {
+    return (
+      <nav className="navbar admin-navbar">
+        <div className="navbar-container">
+          <div className="navbar-logo">
+            <Link to="/admin/dashboard">VIARA ADMIN</Link>
+          </div>
+
+          <ul className="navbar-menu">
+            <li>
+              <span className="user-greeting">Hi, Admin {user?.username}!</span>
+            </li>
+            <li>
+              <button onClick={handleLogout} className="logout-btn">
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    );
+  }
+
+  // REGULAR USER VIEW - Show all navigation
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -28,7 +53,7 @@ function Navbar() {
             <>
               <li><Link to="/cart">🛒 Cart</Link></li>
               <li><Link to="/orders">📦 Orders</Link></li>
-              <li><Link to="/admin/dashboard">👨‍💼 Admin</Link></li> {/* NEW */}
+              
               <li>
                 <span className="user-greeting">Hi, {user?.username}!</span>
               </li>
@@ -46,4 +71,5 @@ function Navbar() {
     </nav>
   );
 }
+
 export default Navbar;

@@ -1,13 +1,12 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import '../styles/Login.css';
 import AuthContext from '../contexts/AuthContext';
+import '../styles/Login.css';
 
 function Login() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   
-  // Form state
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -16,9 +15,6 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  /**
-   * Handle input changes
-   */
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,16 +22,12 @@ function Login() {
     });
   };
 
-  /**
-   * Handle form submission
-   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      // Make API call to login endpoint
       const response = await fetch('http://127.0.0.1:8000/api/auth/login/', {
         method: 'POST',
         headers: {
@@ -50,16 +42,26 @@ function Login() {
       const data = await response.json();
 
       if (!response.ok) {
-        // If login failed, show error
         throw new Error(data.error || 'Login failed');
       }
 
-      // Update auth context (and localStorage via provider effects)
+      // Call login from context (this updates Navbar automatically!)
       login(data.token, data.user);
 
-      // Show success message and redirect
-      alert('Login successful!');
-      navigate('/');
+      // ============================================
+      // REDIRECT BASED ON USER TYPE
+      // ============================================
+      if (data.user.is_staff || data.user.is_superuser) {
+        // Admin user - redirect to admin dashboard
+        console.log('🔐 Admin user detected - redirecting to dashboard');
+        alert('Welcome Admin!');
+        navigate('/admin/dashboard');
+      } else {
+        // Regular user - redirect to home
+        console.log('👤 Regular user - redirecting to home');
+        alert('Login successful!');
+        navigate('/');
+      }
 
     } catch (error) {
       console.error('Login error:', error);

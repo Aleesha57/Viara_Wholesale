@@ -10,8 +10,9 @@ import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Orders from './pages/Orders';
-import AdminDashboard from './pages/AdminDashboard'; // 
-
+import AdminDashboard from './pages/AdminDashboard';
+import AddProduct from './pages/AddProduct';      // NEW
+import EditProduct from './pages/EditProduct';    // NEW
 
 function App() {
   return (
@@ -28,7 +29,11 @@ function App() {
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />
           <Route path="orders" element={<Orders />} />
+          
+          {/* Admin Routes */}
           <Route path="admin/dashboard" element={<AdminDashboard />} />
+          <Route path="admin/add-product" element={<AddProduct />} />        {/* NEW */}
+          <Route path="admin/edit-product/:id" element={<EditProduct />} />  {/* NEW */}
         </Route>
       </Routes>
     </BrowserRouter>

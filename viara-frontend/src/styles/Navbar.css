@@ -127,3 +127,34 @@
    - Applies styles only when screen is 768px or smaller
    - This makes our navbar stack vertically on phones
 */
+
+/* Add this to your existing Navbar.css file */
+
+/* Admin-specific navbar styling */
+.admin-navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.admin-navbar .navbar-logo a {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.admin-navbar .user-greeting {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.admin-navbar .logout-btn {
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  font-weight: 600;
+}
+
+.admin-navbar .logout-btn:hover {
+  background: white;
+  transform: translateY(-2px);
+}

@@ -1,5 +1,5 @@
 from rest_framework import viewsets, filters
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
@@ -9,15 +9,24 @@ class CategoryViewSet(viewsets.ModelViewSet):
     API endpoint for categories
     
     Endpoints:
-    - GET    /api/categories/       - List all categories
-    - POST   /api/categories/       - Create new category
-    - GET    /api/categories/{id}/  - Get specific category
-    - PUT    /api/categories/{id}/  - Update category
-    - DELETE /api/categories/{id}/  - Delete category
+    - GET    /api/categories/       - List all categories (Public)
+    - POST   /api/categories/       - Create new category (Admin only)
+    - GET    /api/categories/{id}/  - Get specific category (Public)
+    - PUT    /api/categories/{id}/  - Update category (Admin only)
+    - DELETE /api/categories/{id}/  - Delete category (Admin only)
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [AllowAny]
+    
+    def get_permissions(self):
+        """
+        Public can view, only admins can create/update/delete
+        """
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated, IsAdminUser]
+        return [permission() for permission in permission_classes]
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -29,14 +38,27 @@ class ProductViewSet(viewsets.ModelViewSet):
     - ?search=laptop          - Search by name/description
     - ?category=electronics   - Filter by category name
     - ?ordering=-price        - Sort by price (descending)
+    
+    Permissions:
+    - GET (list/retrieve) - Public
+    - POST/PUT/PATCH/DELETE - Admin only
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'description']
     ordering_fields = ['price', 'created_at', 'name']
     ordering = ['-created_at']  # Default: newest first
+    
+    def get_permissions(self):
+        """
+        Public can view products, only admins can create/update/delete
+        """
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated, IsAdminUser]
+        return [permission() for permission in permission_classes]
     
     def get_queryset(self):
         """

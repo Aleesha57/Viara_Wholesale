@@ -64,11 +64,19 @@ class LoginView(APIView):
         
         token, created = Token.objects.get_or_create(user=user)
         
+        # NEW: Include is_staff in response
         return Response({
             "token": token.key,
-            "user": UserSerializer(user).data
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "is_staff": user.is_staff,  # NEW: Include admin status
+                "is_superuser": user.is_superuser  # NEW: Include superuser status
+            }
         })
-
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
     """
