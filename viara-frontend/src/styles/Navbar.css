@@ -100,11 +100,41 @@
   font-weight: 500;
   transition: all 0.3s ease;
   display: inline-block;
+  position: relative;
 }
 
 .navbar-menu a:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
+}
+
+/* ✨ ACTIVE PAGE INDICATOR - DESKTOP */
+.navbar-menu a.active {
+  background: rgba(255, 255, 255, 0.25);
+  font-weight: 700;
+}
+
+.navbar-menu a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 80%;
+    opacity: 1;
+  }
 }
 
 /* ==================== USER GREETING ==================== */
@@ -131,6 +161,11 @@
   background: rgba(255, 255, 255, 0.9) !important;
   transform: translateY(-2px) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.login-btn.active {
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3) !important;
 }
 
 .logout-btn {
@@ -265,6 +300,25 @@
     transform: translateX(5px);
   }
 
+  /* ✨ MOBILE ACTIVE INDICATOR */
+  /* ✨ MOBILE ACTIVE */
+.navbar-menu a.active {
+  background: rgba(255, 255, 255, 0.25);
+  font-weight: 700;
+  border-left: 5px solid #f2f2f2; /* soft underline color */
+  padding-left: 15px;
+}
+
+  .navbar-menu a.active::after {
+    display: none; /* Remove desktop underline on mobile */
+  }
+
+  .navbar-menu .login-btn.active {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #667eea !important;
+    border-left: 5px solid #667eea !important;
+  }
+
   .user-greeting {
     width: 100%;
     padding: 16px 20px;
@@ -340,6 +394,11 @@
     font-size: 15px;
   }
 
+  .navbar-menu a.active {
+    border-left: 4px solid white;
+    padding-left: 12px;
+  }
+
   .user-greeting {
     padding: 14px 16px;
     font-size: 14px;
@@ -369,4 +428,33 @@
 
 .navbar-menu::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
+}
+
+/* ✨ ACTIVE NAVBAR UNDERLINE (Soft white-mix-black) */
+.navbar-menu a.active {
+  font-weight: 700;
+  color: #f2f2f2; /* soft white */
+}
+
+.navbar-menu a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 15%;
+  right: 15%;
+  height: 3px;
+  background: linear-gradient(90deg, #f2f2f2, #ddd);
+  border-radius: 2px;
+  animation: underlineFade 0.25s ease-in-out;
+}
+
+@keyframes underlineFade {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+  to {
+    opacity: 1;
+    width: 70%;
+  }
 }

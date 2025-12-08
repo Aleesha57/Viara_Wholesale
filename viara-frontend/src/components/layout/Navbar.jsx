@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import AuthContext from '../../contexts/AuthContext';
 import '../../styles/Navbar.css';
@@ -82,16 +82,69 @@ function Navbar() {
             <button onClick={closeMobileMenu} className="close-btn">✕</button>
           </li>
 
-          <li><Link to="/" onClick={closeMobileMenu}>🏠 Home</Link></li>
-          <li><Link to="/products" onClick={closeMobileMenu}>📦 Products</Link></li>
-          <li><Link to="/about" onClick={closeMobileMenu}>ℹ️ About</Link></li>
-          <li><Link to="/contact" onClick={closeMobileMenu}>📧 Contact</Link></li>
+          <li>
+            <NavLink 
+              to="/" 
+              onClick={closeMobileMenu}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              🏠 Home
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink 
+              to="/products" 
+              onClick={closeMobileMenu}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              📦 Products
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink 
+              to="/about" 
+              onClick={closeMobileMenu}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              ℹ️ About
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink 
+              to="/contact" 
+              onClick={closeMobileMenu}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              📧 Contact
+            </NavLink>
+          </li>
+
           
           {isLoggedIn ? (
             <>
               <li className="menu-divider"></li>
-              <li><Link to="/cart" onClick={closeMobileMenu}>🛒 Cart</Link></li>
-              <li><Link to="/orders" onClick={closeMobileMenu}>📦 Orders</Link></li>
+              <li>
+                <NavLink
+                  to="/cart"
+                  onClick={closeMobileMenu}
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  🛒 Cart
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/orders"
+                  onClick={closeMobileMenu}
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  🛒 Orders
+                </NavLink>
+
+              </li>
               
               <li className="menu-divider"></li>
               <li>
